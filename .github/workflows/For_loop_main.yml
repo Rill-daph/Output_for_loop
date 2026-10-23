@@ -3,26 +3,23 @@ name: Build Android
 on:
   push:
     branches:
-      - master  
-  workflow_dispatch: 
+      - master
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout kode repositori
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. Setup Java JDK
       - name: Set up Java JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      # 3. Setup Flutter Framework
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -30,21 +27,21 @@ jobs:
           channel: 'stable'
           cache: true
 
-      # 4. Install Dependencies
+      - name: Give Executable Permission to Gradlew
+        run: chmod +x android/gradlew
+
       - name: Install Dependencies
         run: flutter pub get
 
-      # 5. Build APK (Release Mode)
       - name: Build APK
-        run: flutter build apk --release --android-skip-build-dependency-validation
+        run: flutter build apk --release
 
-      # 6. Rename File APK
       - name: Rename APK
-        run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/Daffa-Dwi-sulistiyo05.apk
+        run: |
+          mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/Daffa-Dwi-sulistiyo05.apk
 
-      # 7. Upload File APK sebagai Artifact
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Daffa_Dwi_SulistiyoXIPPLG2
-          path: build/app/outputs/flutter-apk/for_loop_Daffa_Dwi_Sulistiyo_05.apk
+          path: build/app/outputs/flutter-apk/Daffa-Dwi-sulistiyo05.apk
